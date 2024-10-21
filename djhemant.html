@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DJ H3MAN - Experience the Sound of the Future</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
+
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .bg-gradient {
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+        }
+
+        .text-gradient {
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glow {
+            box-shadow: 0 0 10px #00ffff, 0 0 20px #ff00ff;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-orbitron transition-colors duration-300">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black bg-opacity-50 backdrop-filter backdrop-blur-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-gradient">DJ H3MAN</a>
+            <button id="menuToggle" class="text-white focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+            <div id="mobileMenu" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50">
+                <div class="flex flex-col items-center justify-center h-full space-y-8">
+                    <a href="#about" class="text-2xl hover:text-gradient transition-colors">About</a>
+                    <a href="#music" class="text-2xl hover:text-gradient transition-colors">Music</a>
+                    <a href="#events" class="text-2xl hover:text-gradient transition-colors">Events</a>
+                    <a href="#contact" class="text-2xl hover:text-gradient transition-colors">Contact</a>
+                    <button id="closeMenu" class="text-white mt-8">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <button id="darkModeToggle" class="fixed top-4 right-4 z-50 bg-white text-black p-2 rounded-full focus:outline-none hover:bg-gray-200 transition-colors">
+        🌙
+    </button>
+
+    <header class="h-screen flex items-center justify-center relative overflow-hidden">
+        <div class="text-center z-10">
+            <h1 class="text-6xl md:text-8xl font-bold mb-4 text-gradient">DJ H3MAN</h1>
+            <p class="text-xl md:text-2xl mb-8">Experience the Sound of the Future</p>
+            <button id="playButton" class="bg-gradient text-white py-2 px-6 rounded-full hover:opacity-80 transition-colors flex items-center space-x-2">
+                <span id="playIcon">▶️</span>
+                <span id="playText">Play Latest Track</span>
+            </button>
+        </div>
+        <div class="absolute inset-0 z-0">
+            <div id="particles" class="absolute inset-0"></div>
+        </div>
+    </header>
+
+    <main>
+        <section id="about" class="py-20 bg-gray-900">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold mb-8 text-center text-gradient">About DJ H3MAN</h2>
+                <p class="text-lg text-center max-w-2xl mx-auto mb-8">
+                    DJ H3MAN is an up-and-coming DJ with a passion for blending electronic beats with futuristic soundscapes. 
+                    With a unique style and energetic performances, DJ H3MAN is quickly making a name in the underground music scene.
+                </p>
+                <div class="text-center">
+                    <button id="viewCertifications" class="inline-block bg-gradient text-white py-2 px-6 rounded-full hover:opacity-80 transition-colors">
+                        View Certifications
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="music" class="py-20">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold mb-8 text-center text-gradient">Latest Tracks</h2>
+                <div id="tracksList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8"></div>
+                <div class="text-center">
+                    <button id="viewAllTracks" class="bg-gradient text-white py-2 px-6 rounded-full hover:opacity-80 transition-colors">
+                        View All Tracks
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="featuredMixtape" class="py-20 bg-gray-900">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold mb-8 text-center text-gradient">Featured Mixtape</h2>
+                <div class="space-y-4">
+                    <iframe 
+                        width="100%" 
+                        height="120" 
+                        src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&feed=%2FDJ_HEMAN%2Fdj-heman-bollywood-tech-house-mixtape-vol2%2F" 
+                        frameborder="0"
+                    ></iframe>
+                    <iframe 
+                        width="100%" 
+                        height="120" 
+                        src="https://player-widget.mixcloud.com/widget/iframe/?hide_cover=1&feed=%2FDJ_HEMAN%2Fholi-party-mashup-2k24%2F" 
+                        frameborder="0"
+                    ></iframe>
+                    <iframe 
+                        width="100%" 
+                        height="120" 
+                        src="https://player-widget.mixcloud.com/widget/iframe/?hide_cover=1&feed=%2FDJ_HEMAN%2Fdj-heman-bollywood-tech-house-mixtape-1%2F" 
+                        frameborder="0"
+                    ></iframe>
+                </div>
+            </div>
+        </section>
+
+        <section id="events" class="py-20">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold mb-8 text-center text-gradient">Gigs</h2>
+                <div class="flex justify-center items-center mb-8">
+                    <span class="mr-2">Past</span>
+                    <label class="switch mx-2">
+                        <input type="checkbox" id="gigToggle" checked>
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="ml-2">Upcoming</span>
+                </div>
+                <div id="gigsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8"></div>
+                <div class="text-center">
+                    <button id="viewAllGigs" class="bg-gradient text-white py-2 px-6 rounded-full hover:opacity-80 transition-colors">
+                        View All Gigs
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-20 bg-gray-900">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold mb-8 text-center text-gradient">Stay Connected</h2>
+                <form id="contactForm" class="max-w-md mx-auto mb-8">
+                    <div class="mb-4">
+                        <input type="text" id="name" name="name" placeholder="Your Name" required class="w-full px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <input type="email" id="email" name="email" placeholder="Your Email" required class="w-full px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <textarea id="message" name="message" placeholder="Your Message" required class="w-full px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="bg-gradient text-white py-2 px-6 rounded-full hover:opacity-80 transition-colors">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+                <div class="text-center">
+                    <h3 class="text-2xl font-semibold mb-4">Follow DJ H3MAN</h3>
+                    <div class="flex justify-center space-x-8">
+                        <a href="#" class="text-4xl hover:text-gradient transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-4xl hover:text-gradient transition-colors">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-4xl hover:text-gradient transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-4xl hover:text-gradient transition-colors">
+                            <i class="fab fa-soundcloud"></i>
+                        </a>
+                        <a href="#" class="text-4xl hover:text-gradient transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-black py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                    &copy; 2024 DJ H3MAN. All rights reserved.
+                </p>
+                <div class="flex items-center">
+                    <span class="text-gray-400 text-sm mr-2">
+                        Managed and maintained by
+                    </span>
+                    <a href="https://jetweb.in" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold hover:text-gradient">
+                        jetweb.in
+                    </a>
+                </div>
+            </div>
+            <div class="mt-4 text-center">
+                <p class="text-gray-400 text-sm">Book DJ H3MAN for your next event!</p>
+                <a href="mailto:booking@djh3man.com" class="text-gradient hover:underline">booking@djh3man.com</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div id="reserveModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-gray-900 p-8 rounded-lg max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4">Reserve Your Spot</h2>
+            <form id="reserveForm">
+                <input type="text" placeholder="Your Name" required class="w-full px-4 py-2 mb-4 rounded-md bg-gray-800 text-white">
+                <input type="email" placeholder="Your Email" required class="w-full px-4 py-2 mb-4 rounded-md bg-gray-800 text-white">
+                <input type="number" placeholder="Number of Persons" required class="w-full px-4 py-2 mb-4 rounded-md bg-gray-800 text-white">
+                <textarea placeholder="Names of Persons Coming" required class="w-full px-4 py-2 mb-4 rounded-md bg-gray-800 text-white" rows="3"></textarea>
+                <div class="flex justify-end">
+                    <button type="button" class="bg-gray-600 text-white py-2 px-4 rounded-md mr-2" onclick="closeReserveModal()">Cancel</button>
+                    <button type="submit" class="bg-gradient text-white py-2 px-4 rounded-md">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="galleryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-gray-900 p-8 rounded-lg max-w-4xl w-full">
+            <h2 class="text-2xl font-bold mb-4">Gig Gallery</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                <!-- Placeholder images, replace with actual gallery images -->
+                <img src="/placeholder.svg?height=200&width=300" alt="Gig Image 1" class="w-full h-40 object-cover rounded-md">
+                <img src="/placeholder.svg?height=200&width=300" alt="Gig Image 2" class="w-full h-40 object-cover rounded-md">
+                <img src="/placeholder.svg?height=200&width=300" alt="Gig Image 3" class="w-full  h-40 object-cover rounded-md">
+                <img src="/placeholder.svg?height=200&width=300" alt="Gig Image 4" class="w-full h-40 object-cover rounded-md">
+                <img src="/placeholder.svg?height=200&width=300" alt="Gig Image 5" class="w-full h-40 object-cover rounded-md">
+                <img src="/placeholder.svg?height=200&width=300" alt="Gig Image 6" class="w-full h-40 object-cover rounded-md">
+            </div>
+            <div class="flex justify-end">
+                <button class="bg-gradient text-white py-2 px-4 rounded-md" onclick="closeGalleryModal()">Close</button>
+            </div>
+        </div>
+    </div>
+    <div id="certificateModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-gray-900 p-8 rounded-lg max-w-4xl w-full">
+            <h2 class="text-2xl font-bold mb-4">DJ H3MAN's Certifications</h2>
+            <div class="mb-4">
+                <img src="./images/certificate.png" alt="DJ H3MAN Certificate" class="w-full object-cover rounded-md">
+            </div>
+            <div class="flex justify-end">
+                <button class="bg-gradient text-white py-2 px-4 rounded-md" onclick="closeCertificateModal()">Close</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+
+    <script>
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        let isDarkMode = true;
+
+        darkModeToggle.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('bg-white');
+            document.body.classList.toggle('text-black');
+            darkModeToggle.textContent = isDarkMode ? '🌙' : '☀️';
+        });
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const closeMenu = document.getElementById('closeMenu');
+
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        closeMenu.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+        });
+
+        // Audio player
+        const playButton = document.getElementById('playButton');
+        const playIcon = document.getElementById('playIcon');
+        const playText = document.getElementById('playText');
+        const audio = new Audio('./tracks/billy.mp3');
+        let isPlaying = false;
+
+        playButton.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                playIcon.textContent = '▶️';
+                playText.textContent = 'Play Latest Track';
+            } else {
+                audio.play();
+                playIcon.textContent = '⏸️';
+                playText.textContent = 'Pause Track';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // Tracks list
+        const tracks = [
+            { id: 1, title: "Aaj Ki Raat", album: "Stree 2", file: "./tracks/aaj.mp3", thumbnail: "./images/aaj.jpg" },
+            { id: 2, title: "Soulmate", album: "Arijit * Badshah", file: "./tracks/soul.mp3", thumbnail: "./images/soul.jpg" },
+            { id: 3, title: "Bloody Mary", album: "Lady GaGa", file: "./tracks/blood.mp3", thumbnail: "./images/blood.jpg" },
+            { id: 4, title: "Lover", album: "Dijit Paaji", file: "./tracks/lover.mp3", thumbnail: "./images/lover.jpg" },
+            { id: 5, title: "Ranjha", album: "Shershah", file: "./tracks/ranjha.mp3", thumbnail: "./images/ranjha.jpg" },
+            { id: 6, title: "Dholida", album: "Loveyaatri", file: "./tracks/dhol.mp3", thumbnail: "./images/dhol.jpg" },
+        ];
+
+        const tracksList = document.getElementById('tracksList');
+        const viewAllTracksButton = document.getElementById('viewAllTracks');
+        let showAllTracks = false;
+        let currentlyPlayingAudio = null;
+
+
+        function createAudioPlayer(track) {
+            const audioPlayer = document.createElement('div');
+            audioPlayer.className = 'mt-4';
+            audioPlayer.innerHTML = `
+                <audio id="audio-${track.id}" src="${track.file}"></audio>
+                <div class="flex items-center justify-between">
+                    <button class="play-pause bg-gradient text-white py-1 px-3 rounded-full text-sm" data-id="${track.id}">Play</button>
+                    <input type="range" min="0" max="100" value="0" class="w-full mx-2 track-progress" data-id="${track.id}">
+                    <span class="track-time text-sm">0:00</span>
+                </div>
+            `;
+            return audioPlayer;
+        }
+
+
+        function renderTracks() {
+            tracksList.innerHTML = '';
+            const tracksToShow = showAllTracks ? tracks : tracks.slice(0, 3);
+            tracksToShow.forEach(track => {
+                const trackElement = document.createElement('div');
+                trackElement.className = 'bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300';
+                trackElement.innerHTML = `
+                    <img src="${track.thumbnail}" alt="${track.title}" class="w-full h-48 object-cover rounded-md mb-4">
+                    <h3 class="text-xl font-semibold mb-2">${track.title}</h3>
+                    <p class="text-gray-400 mb-4">${track.album}</p>
+                `;
+                const audioPlayer = createAudioPlayer(track);
+                trackElement.appendChild(audioPlayer);
+                tracksList.appendChild(trackElement);
+            });
+
+            // Add event listeners for audio players
+            document.querySelectorAll('.play-pause').forEach(button => {
+                button.addEventListener('click', function() {
+                    const audioId = this.getAttribute('data-id');
+                    const audio = document.getElementById(`audio-${audioId}`);
+                    
+                    if (currentlyPlayingAudio && currentlyPlayingAudio !== audio) {
+                        currentlyPlayingAudio.pause();
+                        currentlyPlayingAudio.currentTime = 0;
+                        document.querySelector(`.play-pause[data-id="${currentlyPlayingAudio.id.split('-')[1]}"]`).textContent = 'Play';
+                    }
+
+                    if (audio.paused) {
+                        audio.play();
+                        this.textContent = 'Pause';
+                        currentlyPlayingAudio = audio;
+                    } else {
+                        audio.pause();
+                        this.textContent = 'Play';
+                        currentlyPlayingAudio = null;
+                    }
+                });
+            });
+            document.querySelectorAll('.track-progress').forEach(progress => {
+                const audioId = progress.getAttribute('data-id');
+                const audio = document.getElementById(`audio-${audioId}`);
+                const timeDisplay = progress.nextElementSibling;
+
+                progress.addEventListener('input', function() {
+                    const time = (audio.duration * this.value) / 100;
+                    audio.currentTime = time;
+                });
+
+                audio.addEventListener('timeupdate', function() {
+                    const value = (100 / audio.duration) * audio.currentTime;
+                    progress.value = value;
+                    timeDisplay.textContent = formatTime(audio.currentTime);
+                });
+            });
+        }
+
+        function formatTime(time) {
+            const minutes = Math.floor(time / 60);
+            const seconds = Math.floor(time % 60);
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        viewAllTracksButton.addEventListener('click', () => {
+            showAllTracks = !showAllTracks;
+            renderTracks();
+            viewAllTracksButton.textContent = showAllTracks ? 'Show Less' : 'View All Tracks';
+        });
+
+        renderTracks();
+
+
+        // Gigs list
+        const upcomingGigs = [
+            { id: 1, name: "Neon Nights", date: "2024-04-15", venue: "Electro Club, New York", poster: "/posters/neon_nights.jpg" },
+            { id: 2, name: "Bass Drop Festival", date: "2024-05-20", venue: "Soundwave Arena, Los Angeles", poster: "/posters/bass_drop.jpg" },
+            { id: 3, name: "Midnight Groove", date: "2024-06-10", venue: "Rhythm Lounge, Chicago", poster: "/posters/midnight_groove.jpg" },
+            { id: 4, name: "Techno Tsunami", date: "2024-07-05", venue: "Wave Club, Miami", poster: "/posters/techno_tsunami.jpg" },
+            { id: 5, name: "Beats & Bytes", date: "2024-08-15", venue: "Digital Dome, San Francisco", poster: "/posters/beats_and_bytes.jpg" },
+            { id: 6, name: "Synth Sensation", date: "2024-09-20", venue: "Pixel Palace, Seattle", poster: "/posters/synth_sensation.jpg" },
+        ];
+
+        const pastGigs = [
+            { id: 7, name: "Retro Rave", date: "2023-12-31", venue: "Time Capsule Club, Las Vegas", poster: "./images/dhol.jpg" },
+            { id: 8, name: "Cyber Punk Party", date: "2024-01-15", venue: "Neon Nexus, Tokyo", poster: "/posters/cyber_punk.jpg" },
+            { id: 9, name: "Galactic Groove", date: "2024-02-28", venue: "Starship Disco, Berlin", poster: "/posters/galactic_groove.jpg" },
+            { id: 10, name: "Digital Dreams", date: "2024-03-10", venue: "Virtual Reality Venue, Online", poster: "/posters/digital_dreams.jpg" },
+        ];
+
+        const gigsList = document.getElementById('gigsList');
+        const viewAllGigsButton = document.getElementById('viewAllGigs');
+        const gigToggle = document.getElementById('gigToggle');
+        let showAllGigs = false;
+        let showUpcomingGigs = true;
+
+        function renderGigs() {
+            gigsList.innerHTML = '';
+            const gigsToShow = showUpcomingGigs ? upcomingGigs : pastGigs;
+            const gigsToRender = showAllGigs ? gigsToShow : gigsToShow.slice(0, 3);
+            gigsToRender.forEach(gig => {
+                const gigElement = document.createElement('div');
+                gigElement.className = 'bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300';
+                gigElement.innerHTML = `
+                    <img src="${gig.poster}" alt="${gig.name}" class="w-full h-48 object-cover rounded-md mb-4">
+                    <h3 class="text-xl font-semibold mb-2">${gig.name}</h3>
+                    <p class="text-gray-400 mb-2">${gig.date}</p>
+                    <p class="text-gray-400 mb-4">${gig.venue}</p>
+                    <button class="${showUpcomingGigs ? 'reserve-button' : 'view-gallery-button'} bg-gradient text-white py-2 px-4 rounded-full hover:opacity-80 transition-colors" data-id="${gig.id}">
+                        ${showUpcomingGigs ? 'Reserve Your Spot' : 'View the Experience'}
+                    </button>
+                `;
+                gigsList.appendChild(gigElement);
+            });
+
+            // Add event listeners for buttons
+            if (showUpcomingGigs) {
+                document.querySelectorAll('.reserve-button').forEach(button => {
+                    button.addEventListener('click', openReserveModal);
+                });
+            } else {
+                document.querySelectorAll('.view-gallery-button').forEach(button => {
+                    button.addEventListener('click', openGalleryModal);
+                });
+            }
+        }
+
+        viewAllGigsButton.addEventListener('click', () => {
+            showAllGigs = !showAllGigs;
+            renderGigs();
+            viewAllGigsButton.textContent = showAllGigs ? 'Show Less' : 'View All Gigs';
+        });
+
+        gigToggle.addEventListener('change', () => {
+            showUpcomingGigs = gigToggle.checked;
+            showAllGigs = false;
+            renderGigs();
+            viewAllGigsButton.textContent = 'View All Gigs';
+        });
+
+        renderGigs();
+
+        // Reserve Modal
+        const reserveModal = document.getElementById('reserveModal');
+        const reserveForm = document.getElementById('reserveForm');
+
+        function openReserveModal() {
+            reserveModal.classList.remove('hidden');
+            reserveModal.classList.add('flex');
+        }
+
+        function closeReserveModal() {
+            reserveModal.classList.add('hidden');
+            reserveModal.classList.remove('flex');
+        }
+
+        reserveForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thanks for reserving your spot! We will send you updates via email soon.');
+            closeReserveModal();
+        });
+
+        // Gallery Modal
+        const galleryModal = document.getElementById('galleryModal');
+
+        function openGalleryModal() {
+            galleryModal.classList.remove('hidden');
+            galleryModal.classList.add('flex');
+        }
+
+        function closeGalleryModal() {
+            galleryModal.classList.add('hidden');
+            galleryModal.classList.remove('flex');
+        }
+  // Certificate Modal
+  const certificateModal = document.getElementById('certificateModal');
+        const viewCertificationsButton = document.getElementById('viewCertifications');
+
+        viewCertificationsButton.addEventListener('click', openCertificateModal);
+
+        function openCertificateModal() {
+            certificateModal.classList.remove('hidden');
+            certificateModal.classList.add('flex');
+        }
+
+        function closeCertificateModal() {
+            certificateModal.classList.add('hidden');
+            certificateModal.classList.remove('flex');
+        }
+
+        // Contact form
+        const contactForm = document.getElementById('contactForm');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your message. We will get back to you soon!');
+            contactForm.reset();
+        });
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Header animations
+        gsap.from("header h1", { opacity: 0, y: 50, duration: 1, delay: 0.5 });
+        gsap.from("header p", { opacity: 0, y: 50, duration: 1, delay: 0.7 });
+        gsap.from("#playButton", { opacity: 0, y: 50, duration: 1, delay: 0.9 });
+
+        // Section animations
+        gsap.utils.toArray("section").forEach(section => {
+            gsap.from(section, {
+                opacity: 0,
+                y: 100,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 80%",
+                    end: "top 20%",
+                    scrub: 1,
+                }
+            });
+        });
+
+        // Particle effect
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'absolute w-2 h-2 bg-white rounded-full';
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            document.getElementById('particles').appendChild(particle);
+
+            gsap.to(particle, {
+                opacity: 0,
+                scale: 0,
+                duration: Math.random() * 2 + 1,
+                onComplete: () => {
+                    particle.remove();
+                    createParticle();
+                }
+            });
+        }
+
+        for (let i = 0; i < 50; i++) {
+            createParticle();
+        }
+    </script>
+</body>
+</html>
